@@ -1,0 +1,57 @@
+﻿<Project Sdk="Microsoft.NET.Sdk.Web">
+	<PropertyGroup>
+		<TargetFramework>net8.0</TargetFramework>
+		<Nullable>enable</Nullable>
+		<ImplicitUsings>enable</ImplicitUsings>
+		<RootNamespace>GunStoreIMS.API</RootNamespace>
+	</PropertyGroup>
+
+	<ItemGroup>
+		<!-- Bring in all layers -->
+		<ProjectReference Include="..\GunStoreIMS.Domain\GunStoreIMS.Domain.csproj" />
+		<ProjectReference Include="..\GunStoreIMS.Application\GunStoreIMS.Application.csproj" />
+		<ProjectReference Include="..\GunStoreIMS.Persistence\GunStoreIMS.Persistence.csproj" />
+		<ProjectReference Include="..\GunStoreIMS.Infrastructure\GunStoreIMS.Infrastructure.csproj" />
+		<ProjectReference Include="..\GunStoreIMS.Shared\GunStoreIMS.Shared.csproj" />
+	</ItemGroup>
+
+	<ItemGroup>
+		<!-- ASP.NET Core & Auth -->
+		<PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" />
+		<PackageReference Include="Microsoft.AspNetCore.Authorization" />
+		<PackageReference Include="Microsoft.AspNetCore.OpenApi" />
+
+		<!-- EF Core provider & tools for migrations -->
+		<PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" />
+		<PackageReference Include="Microsoft.EntityFrameworkCore.Design" PrivateAssets="all" />
+		<PackageReference Include="Microsoft.EntityFrameworkCore.Tools" PrivateAssets="all" IncludeAssets="runtime; build; native; contentfiles; analyzers; buildtransitive" />
+
+		<!-- DI & Configuration -->
+		<PackageReference Include="Microsoft.Extensions.DependencyInjection" />
+		<PackageReference Include="Microsoft.Extensions.Configuration.Json" />
+
+		<!-- Validation & Mapping -->
+		<PackageReference Include="FluentValidation" />
+		<PackageReference Include="FluentValidation.DependencyInjectionExtensions" />
+		<PackageReference Include="AutoMapper" />
+
+		<!-- Logging -->
+		<PackageReference Include="Serilog.AspNetCore" />
+		<PackageReference Include="Serilog" />
+		<PackageReference Include="Serilog.Extensions.Hosting" />
+		<PackageReference Include="Serilog.Settings.Configuration" />
+		<PackageReference Include="Serilog.Sinks.Console" />
+		<PackageReference Include="Serilog.Sinks.File" />
+
+		<!-- JSON -->
+		<PackageReference Include="Newtonsoft.Json" />
+
+		<!-- Swagger / OpenAPI UI -->
+		<PackageReference Include="Swashbuckle.AspNetCore" />
+		<PackageReference Include="Swashbuckle.AspNetCore.SwaggerGen" />
+		<PackageReference Include="Swashbuckle.AspNetCore.SwaggerUI" />
+
+		<!-- Scaffolding & code‐gen -->
+		<PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" />
+	</ItemGroup>
+</Project>

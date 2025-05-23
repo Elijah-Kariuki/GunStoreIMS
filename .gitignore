@@ -1,0 +1,409 @@
+# ===================================================================
+
+# Comprehensive .gitignore
+
+# Combines best practices from various sources for a wide range of project types.
+
+#
+
+# Sections:
+
+# 1. Global Build Artifacts (Force Ignore)
+
+# 2. General Build / Dependency Files
+
+# 3. User/IDE Specific Files (Visual Studio, VS Code, JetBrains, etc.)
+
+# 4. Environment & Secret Files (CRITICAL TO IGNORE)
+
+# 5. Logs & Debugging Artifacts
+
+# 6. Operating System & Editor Junk Files
+
+# 7. .NET / C# / ASP.NET Core Specific
+
+# 8. Python Specific
+
+# 9. Node.js / Frontend (React, Angular, Vue, TypeScript, etc.)
+
+# 10. Swagger / OpenAPI / NSwag
+
+# 11. SQL Databases (SQLite, SQL Server LocalDB, SQL scripts)
+
+# 12. Docker Specific
+
+# 13. Flutter Specific
+
+# ===================================================================
+
+# ====================================
+
+# 1. Global Build Artifacts (Force Ignore)
+
+# ====================================
+
+\*\*/bin/
+\*\*/obj/
+\*\*/out/
+
+# ====================================
+
+# 2. General Build / Dependency Files
+
+# ====================================
+
+\*.dll
+\*.exe
+\*.pdb
+\*.nupkg
+\*.snupkg
+\*.deb
+\*.dmg
+\*.gz
+\*.iso
+\*.jar
+\*.msi
+\*.msm
+\*.msp
+\*.rpm
+\*.tar
+\*.war
+\*.zip
+
+project.lock.json
+project.assets.json
+packages/
+package-lock.json
+yarn.lock
+composer.lock
+Podfile.lock
+Cartfile.resolved
+pubspec.lock
+
+\*.cache
+artifacts/
+build/
+dist/
+target/
+
+# ====================================
+
+# 3. User/IDE Specific Files
+
+# ====================================
+
+.vs/
+\*.suo
+\*.user
+\*.userosscache
+\*.sln.docstates
+\*.csproj.user
+\*.vbproj.user
+\*.fsproj.user
+\*.dbmdl
+\*.rsuser
+
+.vscode/\*
+!.vscode/settings.json
+!.vscode/tasks.json
+!.vscode/launch.json
+!.vscode/extensions.json
+!.vscode/c\_cpp\_properties.json
+!.vscode/cspell.json
+
+.idea/
+\*.iml
+\*.ipr
+\*.iws
+\*.DotSettings
+\*.shelf
+
+.history/
+
+.classpath
+.project
+.settings/
+\*.tmp
+\*.bak
+\*.swp
+\*\~
+
+/nbproject/private/
+/nbbuild/
+/dist/
+/nbdist/
+/.nb-gradle/
+
+\*.xcscheme
+\*.xcworkspace
+xcuserdata/
+DerivedData/
+
+.gradle/
+local.properties
+captures/
+\*.apk
+\*.ap\_
+\*.aab
+
+# ====================================
+
+# 4. Environment & Secret Files (CRITICAL TO IGNORE)
+
+# ====================================
+
+.env
+.env.\*
+!.env.example
+
+appsettings.json
+appsettings.\*.json
+secrets.json
+\*.credentials
+\*.p12
+\*.pem
+\*.key
+\*.keystore
+\*.jks
+
+aspire/
+aspire.json
+aspire.local.json
+aspire-secrets/
+aspire-dev-cert.pfx
+
+.terraform/
+\*.tfstate
+*.tfstate.*
+crash.log
+override.tf
+override.tf.json
+\*\_override.tf
+\*\_override.tf.json
+.terraformrc
+terraform.rc
+
+.serverless/
+.aws/
+.gcloud/
+
+# ====================================
+
+# 5. Logs & Debugging Artifacts
+
+# ====================================
+
+logs/
+*.log
+*.tlog
+*.clog
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+lcov.info
+*.lcov
+lcov-report/
+TestResults/
+.coverage/
+*.coverage
+coverage.xml
+profile\_output/
+core.\[0-9]*
+pid*
+\*.pid
+\*.seed
+\*.pid.lock
+
+# ====================================
+
+# 6. Operating System & Editor Junk Files
+
+# ====================================
+
+.DS\_Store
+.AppleDouble
+.LSOverride
+.\_\*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Icon?
+Thumbs.db
+
+\*\~
+\*.swp
+\*.swo
+
+Desktop.ini
+\$RECYCLE.BIN/
+\*.lnk
+
+\*.cab
+\*.msi
+\*.msm
+\*.msp
+
+# ====================================
+
+# 7. .NET / C# / ASP.NET Core Specific
+
+# ====================================
+
+.roslyn/
+ScaffoldingReadMe.txt
+*.aiproj
+Generated/
+.NETCoreApp,Version=v*
+.nuget/
+\*.psmdcp
+.template.config/
+project.fragment.lock.json
+
+# ====================================
+
+# 8. Python Specific
+
+# ====================================
+
+**pycache**/
+\*.py\[cod]
+\*\$py.class
+\*.so
+
+venv/
+ENV/
+env/
+virtualenv/
+.venv/
+.env/
+
+.Python
+build/
+develop-eggs/
+dist/
+downloads/
+eggs/
+.eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+wheels/
+pip-wheel-metadata/
+share/python-wheels/
+\*.egg-info/
+.installed.cfg
+\*.egg
+MANIFEST
+
+\*.spec
+.mypy\_cache/
+.pytest\_cache/
+.ipynb\_checkpoints
+instance/
+
+# ====================================
+
+# 9. Node.js / Frontend
+
+# ====================================
+
+node\_modules/
+out-tsc/
+tmp/
+\*.tsbuildinfo
+.next/
+out/
+.nuxt/
+.cache/
+public/
+.svelte-kit/
+storybook-static/
+
+# ====================================
+
+# 10. Swagger / OpenAPI / NSwag
+
+# ====================================
+
+swagger/
+swagger.json
+nswag/
+swagger-ui/
+nswag.json
+
+# ====================================
+
+# 11. SQL Databases & Scripts
+
+# ====================================
+
+\*.sqlite
+\*.sqlite3
+\*.db
+\*.db3
+\*.mdf
+\*.ldf
+\*.bak
+\*.dump
+
+migrations/
+instance/
+db.sqlite3
+
+# Explicitly ignore all SQL scripts in our infrastructure folder
+
+src/GunStoreIMS.Infrastructure/SQL/\*.sql
+
+# ====================================
+
+# 12. Docker Specific
+
+# ====================================
+
+.dockerignore
+docker-compose.override.yml
+Dockerfile
+\*.env
+\*.pid
+\*.sock
+.docker/
+
+# ====================================
+
+# 13. Flutter Specific
+
+# ====================================
+
+build/
+\*.apk
+\*.ipa
+\*.app
+\*.aab
+
+.dart\_tool/
+.pub-cache/
+
+android/.gradle/
+android/.idea/
+android/app/src/main/assets/flutter\_assets/
+android/app/local.properties
+android/app/key.jks
+android/build/
+
+ios/.bundle/
+ios/Flutter/App.framework/
+ios/Flutter/flutter\_assets/
+ios/Runner.xcworkspace/
+ios/Runner.xcodeproj/project.xcworkspace/
+ios/Runner.xcodeproj/xcuserdata/
+ios/Pods/
+ios/Podfile.lock/
+ios/.symlinks/
+ios/DerivedData/
+ios/Carthage/Build/
+
+\*.iml
+
+# End of .gitignore

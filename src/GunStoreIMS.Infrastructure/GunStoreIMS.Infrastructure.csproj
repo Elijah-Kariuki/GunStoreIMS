@@ -1,0 +1,32 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+	<PropertyGroup>
+		<TargetFramework>net8.0</TargetFramework>
+		<RootNamespace>GunStoreIMS.Infrastructure</RootNamespace>
+		<ManagePackageVersionsCentrally>true</ManagePackageVersionsCentrally>
+	</PropertyGroup>
+
+	<ItemGroup>
+		<!-- To implement any interfaces defined in Domain or Application -->
+		<ProjectReference Include="..\GunStoreIMS.Domain\GunStoreIMS.Domain.csproj" />
+		<ProjectReference Include="..\GunStoreIMS.Application\GunStoreIMS.Application.csproj" />
+	</ItemGroup>
+
+	<ItemGroup>
+		<!-- Configuration & DI -->
+		<PackageReference Include="Microsoft.Extensions.Configuration.Json" />
+		<PackageReference Include="Microsoft.Extensions.DependencyInjection" />
+		<PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" />
+
+		<!-- Logging (Serilog) -->
+		<PackageReference Include="Serilog" />
+		<PackageReference Include="Serilog.Extensions.Hosting" />
+		<PackageReference Include="Serilog.Settings.Configuration" />
+		<PackageReference Include="Serilog.Sinks.Console" />
+		<PackageReference Include="Serilog.Sinks.File" />
+
+		<!-- JSON utilities -->
+		<PackageReference Include="Newtonsoft.Json" />
+
+		<!-- (Add any third-party PDF, email, storage, etc. libraries here) -->
+	</ItemGroup>
+</Project>

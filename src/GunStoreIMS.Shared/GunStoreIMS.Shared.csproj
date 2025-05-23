@@ -1,0 +1,15 @@
+<Project Sdk="Microsoft.NET.Sdk">
+	<PropertyGroup>
+		<TargetFramework>net8.0</TargetFramework>
+		<RootNamespace>GunStoreIMS.Shared</RootNamespace>
+		<ManagePackageVersionsCentrally>true</ManagePackageVersionsCentrally>
+		<Nullable>enable</Nullable>
+		<ImplicitUsings>enable</ImplicitUsings>
+	</PropertyGroup>
+
+	<ItemGroup>
+		<!-- No direct EF Core dependencies, since this project only holds DTOs, enums, and validation attributes -->
+		<PackageReference Include="FluentValidation" />
+		<PackageReference Include="FluentValidation.DependencyInjectionExtensions" />
+	</ItemGroup>
+</Project>

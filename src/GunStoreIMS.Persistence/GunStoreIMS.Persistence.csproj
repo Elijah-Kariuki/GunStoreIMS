@@ -1,0 +1,28 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+	<PropertyGroup>
+		<TargetFramework>net8.0</TargetFramework>
+		<RootNamespace>GunStoreIMS.Persistence</RootNamespace>
+		<ManagePackageVersionsCentrally>true</ManagePackageVersionsCentrally>
+	</PropertyGroup>
+
+	<ItemGroup>
+		<!-- Needs your entities + the Application abstractions (e.g. IFirearmsInventoryDbContext) -->
+		<ProjectReference Include="..\GunStoreIMS.Domain\GunStoreIMS.Domain.csproj" />
+		<ProjectReference Include="..\GunStoreIMS.Shared\GunStoreIMS.Shared.csproj" />
+	</ItemGroup>
+
+	<ItemGroup>
+		<!-- EF Core runtime + SQL Server provider -->
+		<PackageReference Include="Microsoft.EntityFrameworkCore" />
+		<PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" />
+
+		<!-- Design‐time & tooling -->
+		<PackageReference Include="Microsoft.EntityFrameworkCore.Design" PrivateAssets="all" />
+		<PackageReference Include="Microsoft.EntityFrameworkCore.Tools"
+						  PrivateAssets="all"
+						  IncludeAssets="runtime; build; native; contentfiles; analyzers; buildtransitive" />
+
+		<!-- DI & logging abstractions, if you log in your DbContext -->
+		<PackageReference Include="Microsoft.Extensions.Logging.Abstractions" />
+	</ItemGroup>
+</Project>

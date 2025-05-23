@@ -1,0 +1,17 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+	<PropertyGroup>
+		<TargetFramework>net8.0</TargetFramework>
+		<RootNamespace>GunStoreIMS.Domain</RootNamespace>
+		<ManagePackageVersionsCentrally>true</ManagePackageVersionsCentrally>
+	</PropertyGroup>
+
+	<ItemGroup>
+		<!-- EF Core abstractions only -->
+		<ProjectReference Include="..\GunStoreIMS.Shared\GunStoreIMS.Shared.csproj" />
+		<PackageReference Include="Microsoft.EntityFrameworkCore.Abstractions" />
+		<PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer.Abstractions" />
+		<PackageReference Include="Microsoft.Graph" />
+		<PackageReference Include="Microsoft.VisualStudio.Services.Client" />
+		<PackageReference Include="RavenDB.Client" />
+	</ItemGroup>
+</Project>

@@ -1,0 +1,12 @@
+{
+  "version": 2,
+  "dgSpecHash": "+4yuasYUiME=",
+  "success": true,
+  "projectFilePath": "C:\\Users\\elija\\source\\repos\\Enterprise_Back-End\\GunStoreIMS_CSharp\\GunStoreIMS\\src\\GunStoreIMS.Shared\\GunStoreIMS.Shared.csproj",
+  "expectedPackageFiles": [
+    "C:\\Users\\elija\\.nuget\\packages\\fluentvalidation\\12.0.0\\fluentvalidation.12.0.0.nupkg.sha512",
+    "C:\\Users\\elija\\.nuget\\packages\\fluentvalidation.dependencyinjectionextensions\\12.0.0\\fluentvalidation.dependencyinjectionextensions.12.0.0.nupkg.sha512",
+    "C:\\Users\\elija\\.nuget\\packages\\microsoft.extensions.dependencyinjection.abstractions\\2.1.0\\microsoft.extensions.dependencyinjection.abstractions.2.1.0.nupkg.sha512"
+  ],
+  "logs": []
+}

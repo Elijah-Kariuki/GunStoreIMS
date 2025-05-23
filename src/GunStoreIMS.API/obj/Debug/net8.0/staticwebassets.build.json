@@ -1,0 +1,12 @@
+{
+  "Version": 1,
+  "Hash": "ECirXzXAVbMLEX5oAM4DNQ7lggj1lk7cLmKC4r8cwY4=",
+  "Source": "GunStoreIMS.API",
+  "BasePath": "_content/GunStoreIMS.API",
+  "Mode": "Default",
+  "ManifestType": "Build",
+  "ReferencedProjectsConfiguration": [],
+  "DiscoveryPatterns": [],
+  "Assets": [],
+  "Endpoints": []
+}

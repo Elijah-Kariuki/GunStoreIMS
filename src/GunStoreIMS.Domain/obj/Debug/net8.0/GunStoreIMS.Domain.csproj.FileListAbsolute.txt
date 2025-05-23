@@ -1,0 +1,16 @@
+C:\Users\elija\source\repos\Enterprise_Back-End\GunStoreIMS_CSharp\GunStoreIMS\src\GunStoreIMS.Domain\bin\Debug\net8.0\GunStoreIMS.Domain.deps.json
+C:\Users\elija\source\repos\Enterprise_Back-End\GunStoreIMS_CSharp\GunStoreIMS\src\GunStoreIMS.Domain\bin\Debug\net8.0\GunStoreIMS.Domain.dll
+C:\Users\elija\source\repos\Enterprise_Back-End\GunStoreIMS_CSharp\GunStoreIMS\src\GunStoreIMS.Domain\bin\Debug\net8.0\GunStoreIMS.Domain.pdb
+C:\Users\elija\source\repos\Enterprise_Back-End\GunStoreIMS_CSharp\GunStoreIMS\src\GunStoreIMS.Domain\bin\Debug\net8.0\GunStoreIMS.Shared.dll
+C:\Users\elija\source\repos\Enterprise_Back-End\GunStoreIMS_CSharp\GunStoreIMS\src\GunStoreIMS.Domain\bin\Debug\net8.0\GunStoreIMS.Shared.pdb
+C:\Users\elija\source\repos\Enterprise_Back-End\GunStoreIMS_CSharp\GunStoreIMS\src\GunStoreIMS.Domain\obj\Debug\net8.0\GunStoreIMS.Domain.csproj.AssemblyReference.cache
+C:\Users\elija\source\repos\Enterprise_Back-End\GunStoreIMS_CSharp\GunStoreIMS\src\GunStoreIMS.Domain\obj\Debug\net8.0\GunStoreIMS.Domain.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\elija\source\repos\Enterprise_Back-End\GunStoreIMS_CSharp\GunStoreIMS\src\GunStoreIMS.Domain\obj\Debug\net8.0\GunStoreIMS.Domain.AssemblyInfoInputs.cache
+C:\Users\elija\source\repos\Enterprise_Back-End\GunStoreIMS_CSharp\GunStoreIMS\src\GunStoreIMS.Domain\obj\Debug\net8.0\GunStoreIMS.Domain.AssemblyInfo.cs
+C:\Users\elija\source\repos\Enterprise_Back-End\GunStoreIMS_CSharp\GunStoreIMS\src\GunStoreIMS.Domain\obj\Debug\net8.0\GunStoreIMS.Domain.csproj.CoreCompileInputs.cache
+C:\Users\elija\source\repos\Enterprise_Back-End\GunStoreIMS_CSharp\GunStoreIMS\src\GunStoreIMS.Domain\obj\Debug\net8.0\GunStoreIMS.Domain.sourcelink.json
+C:\Users\elija\source\repos\Enterprise_Back-End\GunStoreIMS_CSharp\GunStoreIMS\src\GunStoreIMS.Domain\obj\Debug\net8.0\GunStore.7B190A8B.Up2Date
+C:\Users\elija\source\repos\Enterprise_Back-End\GunStoreIMS_CSharp\GunStoreIMS\src\GunStoreIMS.Domain\obj\Debug\net8.0\GunStoreIMS.Domain.dll
+C:\Users\elija\source\repos\Enterprise_Back-End\GunStoreIMS_CSharp\GunStoreIMS\src\GunStoreIMS.Domain\obj\Debug\net8.0\refint\GunStoreIMS.Domain.dll
+C:\Users\elija\source\repos\Enterprise_Back-End\GunStoreIMS_CSharp\GunStoreIMS\src\GunStoreIMS.Domain\obj\Debug\net8.0\GunStoreIMS.Domain.pdb
+C:\Users\elija\source\repos\Enterprise_Back-End\GunStoreIMS_CSharp\GunStoreIMS\src\GunStoreIMS.Domain\obj\Debug\net8.0\ref\GunStoreIMS.Domain.dll

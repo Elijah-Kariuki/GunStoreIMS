@@ -1,0 +1,13 @@
+C:\Users\elija\source\repos\Enterprise_Back-End\GunStoreIMS_CSharp\GunStoreIMS\src\GunStoreIMS.Shared\bin\Debug\net8.0\GunStoreIMS.Shared.deps.json
+C:\Users\elija\source\repos\Enterprise_Back-End\GunStoreIMS_CSharp\GunStoreIMS\src\GunStoreIMS.Shared\bin\Debug\net8.0\GunStoreIMS.Shared.dll
+C:\Users\elija\source\repos\Enterprise_Back-End\GunStoreIMS_CSharp\GunStoreIMS\src\GunStoreIMS.Shared\bin\Debug\net8.0\GunStoreIMS.Shared.pdb
+C:\Users\elija\source\repos\Enterprise_Back-End\GunStoreIMS_CSharp\GunStoreIMS\src\GunStoreIMS.Shared\obj\Debug\net8.0\GunStoreIMS.Shared.csproj.AssemblyReference.cache
+C:\Users\elija\source\repos\Enterprise_Back-End\GunStoreIMS_CSharp\GunStoreIMS\src\GunStoreIMS.Shared\obj\Debug\net8.0\GunStoreIMS.Shared.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\elija\source\repos\Enterprise_Back-End\GunStoreIMS_CSharp\GunStoreIMS\src\GunStoreIMS.Shared\obj\Debug\net8.0\GunStoreIMS.Shared.AssemblyInfoInputs.cache
+C:\Users\elija\source\repos\Enterprise_Back-End\GunStoreIMS_CSharp\GunStoreIMS\src\GunStoreIMS.Shared\obj\Debug\net8.0\GunStoreIMS.Shared.AssemblyInfo.cs
+C:\Users\elija\source\repos\Enterprise_Back-End\GunStoreIMS_CSharp\GunStoreIMS\src\GunStoreIMS.Shared\obj\Debug\net8.0\GunStoreIMS.Shared.csproj.CoreCompileInputs.cache
+C:\Users\elija\source\repos\Enterprise_Back-End\GunStoreIMS_CSharp\GunStoreIMS\src\GunStoreIMS.Shared\obj\Debug\net8.0\GunStoreIMS.Shared.sourcelink.json
+C:\Users\elija\source\repos\Enterprise_Back-End\GunStoreIMS_CSharp\GunStoreIMS\src\GunStoreIMS.Shared\obj\Debug\net8.0\GunStoreIMS.Shared.dll
+C:\Users\elija\source\repos\Enterprise_Back-End\GunStoreIMS_CSharp\GunStoreIMS\src\GunStoreIMS.Shared\obj\Debug\net8.0\refint\GunStoreIMS.Shared.dll
+C:\Users\elija\source\repos\Enterprise_Back-End\GunStoreIMS_CSharp\GunStoreIMS\src\GunStoreIMS.Shared\obj\Debug\net8.0\GunStoreIMS.Shared.pdb
+C:\Users\elija\source\repos\Enterprise_Back-End\GunStoreIMS_CSharp\GunStoreIMS\src\GunStoreIMS.Shared\obj\Debug\net8.0\ref\GunStoreIMS.Shared.dll
