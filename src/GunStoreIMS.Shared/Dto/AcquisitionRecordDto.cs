@@ -33,6 +33,28 @@ namespace GunStoreIMS.Shared.Dto
         [StringLength(100, ErrorMessage = "Serial number cannot exceed 100 characters.")]
         public string SerialNumber { get; set; } = default!;
 
+        // --- ADDED Firearm Details ---
+        /// <summary>
+        /// Manufacturer of the firearm. Required when creating a new firearm.
+        /// </summary>
+        [Required(ErrorMessage = "Manufacturer is required.")]
+        [StringLength(100, ErrorMessage = "Manufacturer cannot exceed 100 characters.")]
+        public string Manufacturer { get; set; } = default!;
+
+        /// <summary>
+        /// Model of the firearm. Required when creating a new firearm.
+        /// </summary>
+        [Required(ErrorMessage = "Model is required.")]
+        [StringLength(100, ErrorMessage = "Model cannot exceed 100 characters.")]
+        public string Model { get; set; } = default!;
+
+        /// <summary>
+        /// Importer's name, if applicable.
+        /// </summary>
+        [StringLength(150, ErrorMessage = "Importer name cannot exceed 150 characters.")]
+        public string? ImporterName { get; set; }
+        // --- END ADDED ---
+
         /// <summary>
         /// Date of acquisition.
         /// </summary>

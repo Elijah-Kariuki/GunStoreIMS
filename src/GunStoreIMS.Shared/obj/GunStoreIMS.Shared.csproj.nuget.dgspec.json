@@ -83,6 +83,7 @@
             "Microsoft.Extensions.Hosting.Abstractions": "8.0.1",
             "Microsoft.Extensions.Logging.Abstractions": "9.0.4",
             "Microsoft.Graph": "5.78.0",
+            "Microsoft.VisualStudio.Azure.Containers.Tools.Targets": "1.21.0",
             "Microsoft.VisualStudio.Services.Client": "19.225.1",
             "Microsoft.VisualStudio.Web.CodeGeneration.Design": "9.0.0",
             "Newtonsoft.Json": "13.0.3",

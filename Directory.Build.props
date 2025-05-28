@@ -1,5 +1,11 @@
 <Project>
+  <PropertyGroup>
+    <!-- Enable central package management across all projects -->
+    <ManagePackageVersionsCentrally>true</ManagePackageVersionsCentrally>
+  </PropertyGroup>
+
   <ItemGroup>
+    <!-- Link the one GlobalUsings.cs you keep at your solution root -->
     <Compile Include="$(MSBuildThisFileDirectory)GlobalUsings.cs">
       <Link>GlobalUsings.cs</Link>
     </Compile>

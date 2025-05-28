@@ -4,16 +4,18 @@ using System.Text.Json.Serialization;
 
 namespace GunStoreIMS.Shared.Dto
 {
-    /* -- B.3 Buyer signature & date -------------------------------------- */
-    public class BuyerCertificationDto
+    // ======================================================================
+    //  Certification DTO (Used within SectionB and SectionD)
+    // ======================================================================
+    public class CertificationDto
     {
-        /// <summary>Base-64 encoded PNG/JPEG captured by front-end signature pad.</summary>
-        [Required, StringLength(500_000)] // Limits size to ~500 KB (adjust as needed)
-        [JsonPropertyName("signature_image")]
-        public string SignatureImage { get; set; } = default!;
+        [Required(ErrorMessage = "Signature is required.")]
+        [Display(Name = "Signature")]
+        public string Signature { get; set; } = default!; // Base64 Encoded String
 
-        [Required, DataType(DataType.Date)]
-        [JsonPropertyName("date_signed")]
+        [Required(ErrorMessage = "Certification Date is required.")]
+        [DataType(DataType.Date)]
+        [Display(Name = "Certification Date")]
         public DateTime DateSigned { get; set; }
     }
 }

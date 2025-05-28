@@ -1,76 +1,52 @@
-﻿using System;
-using System.ComponentModel.DataAnnotations;
-using GunStoreIMS.Shared.Enums;
+﻿using System.ComponentModel.DataAnnotations;
+using System.Text.Json.Serialization;
+using GunStoreIMS.Shared.Enums; // Assuming FirearmType enum is here
 
 namespace GunStoreIMS.Shared.Dto
 {
     /// <summary>
-    /// DTO for firearm listings, fully compliant with ATF Section A (Item 1-5).
+    /// DTO for firearm listings, fully compliant with ATF Section A (Item 1–5).
     /// </summary>
     public class FirearmLineDto
     {
         /// <summary>
-        /// Unique identifier for the firearm.
+        /// Gets or sets the Manufacturer and Importer (Question 1).
         /// </summary>
-        public Guid Id { get; set; }
-
-        /// <summary>
-        /// Manufacturer or Importer of the firearm (includes PMF designation).
-        /// </summary>
-        [Required, StringLength(150)]
+        [JsonPropertyName("ManufacturerImporter")]
+        [Required(ErrorMessage = "Manufacturer/Importer is required.")]
+        [StringLength(150, ErrorMessage = "Manufacturer/Importer cannot exceed 150 characters.")]
         public string ManufacturerImporter { get; set; } = default!;
 
         /// <summary>
-        /// Model of the firearm. Optional.
+        /// Gets or sets the Model (Question 2).
         /// </summary>
-        [StringLength(100)]
-        public string? Model { get; set; }
+        [JsonPropertyName("Model")]
+        [Required(ErrorMessage = "Model is required.")]
+        [StringLength(60, ErrorMessage = "Model cannot exceed 60 characters.")]
+        public string Model { get; set; } = default!;
 
         /// <summary>
-        /// Serial number of the firearm (uniquely identifying each firearm).
+        /// Gets or sets the Serial Number (Question 3). Use 'NSN' if none.
         /// </summary>
-        [Required, StringLength(50)]
+        [JsonPropertyName("SerialNumber")]
+        [Required(ErrorMessage = "Serial Number is required.")]
+        [StringLength(60, ErrorMessage = "Serial Number cannot exceed 60 characters.")]
         public string SerialNumber { get; set; } = default!;
 
         /// <summary>
-        /// Firearm Type (e.g., Pistol, Rifle, Shotgun, Frame, Receiver).
+        /// Gets or sets the Type of firearm (Question 4).
+        /// This should correspond to the ATF Form 4473 defined types.
         /// </summary>
-        [Required]
-        public FirearmEnumType FirearmType { get; set; }
+        [JsonPropertyName("Type")]
+        [Required(ErrorMessage = "Type is required.")]
+        public FirearmType Type { get; set; } // Enum from GunStoreIMS.Shared.Enums
 
         /// <summary>
-        /// Caliber or gauge of the firearm.
+        /// Gets or sets the Caliber or Gauge (Question 5).
         /// </summary>
-        [Required, StringLength(50)]
+        [JsonPropertyName("CaliberGauge")]
+        [Required(ErrorMessage = "Caliber or Gauge is required.")]
+        [StringLength(30, ErrorMessage = "Caliber or Gauge cannot exceed 30 characters.")]
         public string CaliberGauge { get; set; } = default!;
-
-        /// <summary>
-        /// Flag indicating if the firearm falls under NFA regulations.
-        /// </summary>
-        public bool IsNFAItem { get; set; }
-
-        /// <summary>
-        /// If NFA, classification (e.g., Machine Gun, Silencer).
-        /// </summary>
-        public NfaClassification? NfaClass { get; set; }
-
-        /// <summary>
-        /// Owning FFL ID (for tracking).
-        /// </summary>
-        [Required]
-        public int FFLId { get; set; }
-
-        /// <summary>
-        /// Initial Acquisition Date (tracking when entered into inventory).
-        /// </summary>
-        [Required]
-        [DataType(DataType.Date)]
-        public DateTime InitialAcquisitionDate { get; set; }
-
-        /// <summary>
-        /// Current status of the firearm (e.g., In Inventory, Transferred, Disposed).
-        /// </summary>
-        [Required]
-        public FirearmStatus CurrentStatus { get; set; }
     }
 }

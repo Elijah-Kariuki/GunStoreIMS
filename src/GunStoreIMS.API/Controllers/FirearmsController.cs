@@ -6,7 +6,7 @@ using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Threading.Tasks;
 using GunStoreIMS.Application.Services;
-using GunStoreIMS.Domain.Interfaces;
+using GunStoreIMS.Abstractions.Interfaces;
 
 namespace GunStoreIMS.API.Controllers
 {

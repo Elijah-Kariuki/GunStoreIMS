@@ -7,6 +7,7 @@
 
 	<ItemGroup>
 		<!-- Needs your entities + the Application abstractions (e.g. IFirearmsInventoryDbContext) -->
+		<ProjectReference Include="..\GunStoreIMS.Abstractions\GunStoreIMS.Abstractions.csproj" />
 		<ProjectReference Include="..\GunStoreIMS.Domain\GunStoreIMS.Domain.csproj" />
 		<ProjectReference Include="..\GunStoreIMS.Shared\GunStoreIMS.Shared.csproj" />
 	</ItemGroup>
@@ -18,9 +19,7 @@
 
 		<!-- Design‐time & tooling -->
 		<PackageReference Include="Microsoft.EntityFrameworkCore.Design" PrivateAssets="all" />
-		<PackageReference Include="Microsoft.EntityFrameworkCore.Tools"
-						  PrivateAssets="all"
-						  IncludeAssets="runtime; build; native; contentfiles; analyzers; buildtransitive" />
+		<PackageReference Include="Microsoft.EntityFrameworkCore.Tools" PrivateAssets="all" IncludeAssets="runtime; build; native; contentfiles; analyzers; buildtransitive" />
 
 		<!-- DI & logging abstractions, if you log in your DbContext -->
 		<PackageReference Include="Microsoft.Extensions.Logging.Abstractions" />

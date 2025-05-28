@@ -1,21 +1,49 @@
-﻿namespace GunStoreIMS.Shared.Enums
+﻿// Shared/Enums/FirearmType.cs
+using System.Runtime.Serialization;
+using System.Text.Json.Serialization;
+
+namespace GunStoreIMS.Shared.Enums
 {
-    // ATF Note: Ensure these types align with ATF Form 4473 and eForms options.
+    [JsonConverter(typeof(JsonStringEnumConverter))]
     public enum FirearmType
     {
+        [EnumMember(Value = "Pistol")]
         Pistol,
+       
+        [EnumMember(Value = "Revolver")]
         Revolver,
+        
+        [EnumMember(Value = "Rifle")]
         Rifle,
+        
+        [EnumMember(Value = "Shotgun")]
         Shotgun,
-        Receiver,            // Frame or Receiver (ATF Final Rule 2021R-05F)
-        Frame,               // Explicitly "Frame" if distinguished from "Receiver"
-        Silencer,            // NFA Item
-        ShortBarreledRifle,  // NFA Item (SBR)
-        ShortBarreledShotgun,// NFA Item (SBS)
-        MachineGun,          // NFA Item
-        DestructiveDevice,   // NFA Item (DD)
-        AnyOtherWeapon,      // NFA Item (AOW)
-        Other                // If no other category fits, requires description
+        
+        [EnumMember(Value = "Receiver")]
+        Receiver,
+        
+        [EnumMember(Value = "Frame")]
+        Frame,
+        
+        [EnumMember(Value = "Other")]
+        Other,
+        
+        [EnumMember(Value = "Silencer")]
+        Silencer,
+        
+        [EnumMember(Value = "Machinegun")]
+        Machinegun,
+        
+        [EnumMember(Value = "Short-barreled shotgun")]
+        ShortBarreledShotgun,
+        
+        [EnumMember(Value = "Short-barreled rifle")]
+        ShortBarreledRifle,
+        
+        [EnumMember(Value = "Destructive device")]
+        DestructiveDevice,
+        
+        [EnumMember(Value = "Any other weapon")]
+        AnyOtherWeapon
     }
-
 }

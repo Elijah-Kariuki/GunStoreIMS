@@ -8,10 +8,11 @@
 
 	<ItemGroup>
 		<!-- Bring in all layers -->
+		<ProjectReference Include="..\GunStoreIMS.Abstractions\GunStoreIMS.Abstractions.csproj" />
 		<ProjectReference Include="..\GunStoreIMS.Domain\GunStoreIMS.Domain.csproj" />
 		<ProjectReference Include="..\GunStoreIMS.Application\GunStoreIMS.Application.csproj" />
-		<ProjectReference Include="..\GunStoreIMS.Persistence\GunStoreIMS.Persistence.csproj" />
 		<ProjectReference Include="..\GunStoreIMS.Infrastructure\GunStoreIMS.Infrastructure.csproj" />
+		<ProjectReference Include="..\GunStoreIMS.Persistence\GunStoreIMS.Persistence.csproj" />
 		<ProjectReference Include="..\GunStoreIMS.Shared\GunStoreIMS.Shared.csproj" />
 	</ItemGroup>
 

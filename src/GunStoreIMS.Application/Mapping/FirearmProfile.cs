@@ -14,13 +14,9 @@ namespace GunStoreIMS.Application.Mapping
                 .ForMember(d => d.ManufacturerImporter, o => o.MapFrom(s => s.Manufacturer))
                 .ForMember(d => d.Model, o => o.MapFrom(s => s.Model))
                 .ForMember(d => d.SerialNumber, o => o.MapFrom(s => s.SerialNumber))
-                .ForMember(d => d.FirearmType, o => o.MapFrom(s => s.FirearmType))
-                .ForMember(d => d.CaliberGauge, o => o.MapFrom(s => s.Caliber.Name))
-                .ForMember(d => d.IsNFAItem, o => o.MapFrom(s => s.NfaClass != null))
-                .ForMember(d => d.NfaClass, o => o.MapFrom(s => s.NfaClass))
-                .ForMember(d => d.FFLId, o => o.MapFrom(s => s.FFLId))
-                .ForMember(d => d.InitialAcquisitionDate, o => o.MapFrom(s => s.InitialAcquisitionDate))
-                .ForMember(d => d.CurrentStatus, o => o.MapFrom(s => s.CurrentStatus));
+                .ForMember(d => d.Type, o => o.MapFrom(s => s.FirearmType))  // Updated from FirearmType -> Type
+                .ForMember(d => d.CaliberGauge, o => o.MapFrom(s => s.Caliber.Name));
+
 
             // 2) DOMAIN → DETAIL
             CreateMap<Firearm, FirearmDetailDto>()

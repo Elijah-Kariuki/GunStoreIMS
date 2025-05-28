@@ -9,6 +9,7 @@
 
 	<ItemGroup>
 		<!-- Core domain models & interfaces -->
+		<ProjectReference Include="..\GunStoreIMS.Abstractions\GunStoreIMS.Abstractions.csproj" />
 		<ProjectReference Include="..\GunStoreIMS.Domain\GunStoreIMS.Domain.csproj" />
 		<ProjectReference Include="..\GunStoreIMS.Persistence\GunStoreIMS.Persistence.csproj" />
 		<ProjectReference Include="..\GunStoreIMS.Shared\GunStoreIMS.Shared.csproj" />

@@ -1,6 +1,6 @@
 ﻿using System.Text.Json.Serialization;
 using FluentValidation;                            // ← for AddValidatorsFromAssemblyContaining
-using GunStoreIMS.Domain.Interfaces;          // ← your service interfaces
+using GunStoreIMS.Abstractions.Interfaces;          // ← your service interfaces
 using GunStoreIMS.Application.Services;            // ← your service implementations
 using GunStoreIMS.Shared.Validation;          // ← your validators (if you put them here)
 using GunStoreIMS.Application.Mapping;
@@ -17,7 +17,8 @@ using GunStoreIMS.Domain.Utilities;       // ← your shared utilities
 
 using Microsoft.EntityFrameworkCore;
 using Microsoft.OpenApi.Models;
-using Serilog;                                     // ← for UseSerilog()
+using Serilog;
+using GunStoreIMS.Persistence.Repositories;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -32,10 +33,12 @@ builder.Services.AddDbContextPool<FirearmsInventoryDB>(opt =>
 
 // 2) Application services (your business logic)
 // — register each interface → implementation
-builder.Services.AddScoped<IFirearmService, FirearmService>();
+builder.Services.AddScoped<IAcquisitionRecordRepository, EfAcquisitionRecordRepository>();
 builder.Services.AddScoped<IAcquisitionRecordService, AcquisitionRecordService>();
-builder.Services.AddScoped<IDispositionRecordService, DispositionRecordService>();
 builder.Services.AddScoped<IDealerRecordService, DealerRecordService>();
+builder.Services.AddScoped<IDispositionRecordService, DispositionRecordService>();
+builder.Services.AddScoped<IFirearmService, FirearmService>();
+
 
 // 3) AutoMapper
 builder.Services.AddAutoMapper(typeof(AdRecordsProfile),

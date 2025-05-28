@@ -1,0 +1,17 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+    <PropertyGroup>
+        <TargetFramework>net8.0</TargetFramework>
+        <RootNamespace>GunStoreIMS.Abstractions</RootNamespace>
+        <ImplicitUsings>enable</ImplicitUsings> <Nullable>enable</Nullable> </PropertyGroup>
+
+    <ItemGroup>
+        <ProjectReference Include="..\GunStoreIMS.Domain\GunStoreIMS.Domain.csproj" />
+
+        <ProjectReference Include="..\GunStoreIMS.Shared\GunStoreIMS.Shared.csproj" /> 
+        </ItemGroup>
+
+    <ItemGroup>
+        </ItemGroup>
+
+</Project>

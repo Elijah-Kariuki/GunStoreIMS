@@ -1,89 +1,92 @@
-﻿using AutoMapper;
-using GunStoreIMS.Shared.Dto;
+﻿// API/Controllers/Form4473Controller.cs
+using AutoMapper;
 using GunStoreIMS.Domain.Models;
 using GunStoreIMS.Persistence.Data;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using GunStoreIMS.Shared.Dto;
 
-namespace GunStoreIMS.API.Controllers
+
+[ApiController]
+[Route("api/[controller]")]
+public class Form4473Controller : ControllerBase
 {
-    [ApiController]
-    [Route("api/[controller]")]
-    public class Form4473Controller : ControllerBase
+    private readonly FirearmsInventoryDB _context;
+    private readonly IMapper _mapper;
+
+    public Form4473Controller(FirearmsInventoryDB context, IMapper mapper)
     {
-        private readonly FirearmsInventoryDB _context;
+        _context = context;
+        _mapper = mapper;
+    }
 
-        public Form4473Controller(FirearmsInventoryDB context)
+    [HttpGet]
+    public async Task<ActionResult<IEnumerable<Form4473RecordDto>>> GetAll()
+    {
+        var entities = await _context.Form4473Records.ToListAsync();
+        // ensure each entity has SectionA populated
+        entities.ForEach(e => {
+            e.MapFirearmLinesToSectionAForSerialization();
+        });
+        var dtos = _mapper.Map<List<Form4473RecordDto>>(entities);
+        return Ok(dtos);
+    }
+
+    [HttpGet("{id}")]
+    public async Task<ActionResult<Form4473RecordDto>> GetById(Guid id)
+    {
+        var entity = await _context.Form4473Records.FindAsync(id);
+        if (entity == null) return NotFound();
+
+        entity.MapFirearmLinesToSectionAForSerialization();
+        var dto = _mapper.Map<Form4473RecordDto>(entity);
+        return Ok(dto);
+    }
+
+    [HttpPost]
+    public async Task<ActionResult<Form4473RecordDto>> Create(Form4473RecordDto dto)
+    {
+        var entity = _mapper.Map<Form4473Record>(dto);
+        entity.Id = Guid.NewGuid();
+        _context.Form4473Records.Add(entity);
+        await _context.SaveChangesAsync();
+
+        // prepare return DTO
+        entity.MapFirearmLinesToSectionAForSerialization();
+        var resultDto = _mapper.Map<Form4473RecordDto>(entity);
+
+        return CreatedAtAction(nameof(GetById),
+            new { id = resultDto.Id },
+            resultDto);
+    }
+
+    [HttpPut("{id}")]
+    public async Task<IActionResult> Update(Guid id, Form4473RecordDto dto)
+    {
+        if (id != dto.Id) return BadRequest();
+
+        var entity = _mapper.Map<Form4473Record>(dto);
+        _context.Entry(entity).State = EntityState.Modified;
+
+        try { await _context.SaveChangesAsync(); }
+        catch (DbUpdateConcurrencyException)
         {
-            _context = context;
-        }
-
-        // GET: api/Form4473
-        [HttpGet]
-        public async Task<ActionResult<IEnumerable<Form4473Record>>> GetAll()
-        {
-            return await _context.Form4473Records.ToListAsync();
-        }
-
-        // GET: api/Form4473/{id}
-        [HttpGet("{id}")]
-        public async Task<ActionResult<Form4473Record>> GetById(Guid id)
-        {
-            var record = await _context.Form4473Records.FindAsync(id);
-
-            if (record == null)
+            if (!_context.Form4473Records.Any(e => e.Id == id))
                 return NotFound();
-
-            return record;
+            throw;
         }
 
-        // POST: api/Form4473
-        [HttpPost]
-        public async Task<ActionResult<Form4473Record>> Create(Form4473Record form4473Record)
-        {
-            form4473Record.Id = Guid.NewGuid();
-            _context.Form4473Records.Add(form4473Record);
-            await _context.SaveChangesAsync();
+        return NoContent();
+    }
 
-            return CreatedAtAction(nameof(GetById), new { id = form4473Record.Id }, form4473Record);
-        }
+    [HttpDelete("{id}")]
+    public async Task<IActionResult> Delete(Guid id)
+    {
+        var entity = await _context.Form4473Records.FindAsync(id);
+        if (entity == null) return NotFound();
 
-        // PUT: api/Form4473/{id}
-        [HttpPut("{id}")]
-        public async Task<IActionResult> Update(Guid id, Form4473Record form4473Record)
-        {
-            if (id != form4473Record.Id)
-                return BadRequest();
-
-            _context.Entry(form4473Record).State = EntityState.Modified;
-
-            try
-            {
-                await _context.SaveChangesAsync();
-            }
-            catch (DbUpdateConcurrencyException)
-            {
-                if (!_context.Form4473Records.Any(e => e.Id == id))
-                    return NotFound();
-
-                throw;
-            }
-
-            return NoContent();
-        }
-
-        // DELETE: api/Form4473/{id}
-        [HttpDelete("{id}")]
-        public async Task<IActionResult> Delete(Guid id)
-        {
-            var record = await _context.Form4473Records.FindAsync(id);
-            if (record == null)
-                return NotFound();
-
-            _context.Form4473Records.Remove(record);
-            await _context.SaveChangesAsync();
-
-            return NoContent();
-        }
+        _context.Form4473Records.Remove(entity);
+        await _context.SaveChangesAsync();
+        return NoContent();
     }
 }

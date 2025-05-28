@@ -2,23 +2,32 @@
 using System;
 using System.ComponentModel.DataAnnotations;
 
-namespace GunStoreIMS.Shared.Dto;
-
-/* ======================================================================
-   Permit Details DTO – Represents firearm permit information
-   ==================================================================== */
-public class PermitDetailsDto
+namespace GunStoreIMS.Shared.Dto
 {
-    [StringLength(2)]
-    public string? IssuingState { get; set; }
 
-    public string? PermitType { get; set; }
+    // ======================================================================
+    //  PermitDetails DTO (Optional, Used within NICSCheckDto) - Q29
+    // ======================================================================
+    public class PermitDetailsDto
+    {
+        [RegularExpression("^[A-Z]{2}$", ErrorMessage = "State must be a 2-letter code.")]
+        [Display(Name = "29. Issuing State")]
+        public string? IssuingState { get; set; }
 
-    [DataType(DataType.Date)]
-    public DateTime? IssuedDate { get; set; }
+        [StringLength(50)]
+        [Display(Name = "29. Permit Type")]
+        public string? PermitType { get; set; }
 
-    [DataType(DataType.Date)]
-    public DateTime? ExpirationDate { get; set; }
+        [DataType(DataType.Date)]
+        [Display(Name = "29. Issued Date")]
+        public DateTime? IssuedDate { get; set; }
 
-    public string? PermitNumber { get; set; }
+        [DataType(DataType.Date)]
+        [Display(Name = "29. Expiration Date")]
+        public DateTime? ExpirationDate { get; set; }
+
+        [StringLength(50)]
+        [Display(Name = "29. Permit Number")]
+        public string? PermitNumber { get; set; }
+    }
 }

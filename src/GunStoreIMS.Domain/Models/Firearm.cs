@@ -67,7 +67,7 @@ namespace GunStoreIMS.Domain.Models
         {
             { FirearmEnumType.ShortBarreledRifle, (true, NfaClassification.ShortBarreledRifle) },
             { FirearmEnumType.ShortBarreledShotgun, (true, NfaClassification.ShortBarreledShotgun) },
-            { FirearmEnumType.MachineGun, (true, NfaClassification.MachineGun) },
+            { FirearmEnumType.Machinegun, (true, NfaClassification.MachineGun) },
             { FirearmEnumType.Silencer, (true, NfaClassification.Silencer) },
             { FirearmEnumType.DestructiveDevice, (true, NfaClassification.DestructiveDevice) },
             { FirearmEnumType.AnyOtherWeapon, (true, NfaClassification.AnyOtherWeapon) }
@@ -118,11 +118,17 @@ namespace GunStoreIMS.Domain.Models
         public bool IsImported { get; init; }
 
         // --- FFL Specific Information & PMF Markings ---
-        [Required(ErrorMessage = "Owning FFL ID is required.")]
-        public int FFLId { get; init; }
+        /// <summary>
+        /// Foreign key linking to the DealerRecord that owns this firearm.
+        /// </summary>
+        [Required(ErrorMessage = "Owning Dealer Record ID is required.")]
+        public Guid DealerRecordId { get; init; } // <--- CHANGED: Now Guid, renamed to DealerRecordId
 
-        [ForeignKey(nameof(FFLId))]
-        public virtual FFL FFL { get; init; } = default!;
+        /// <summary>
+        /// Navigation property to the owning DealerRecord.
+        /// </summary>
+        [ForeignKey(nameof(DealerRecordId))] // <--- CHANGED: Points to DealerRecordId
+        public virtual DealerRecord DealerRecord { get; init; } = default!; // <--- CHANGED: Now DealerRecord type and name
 
         [StringLength(150, ErrorMessage = "Your FFL Marking cannot exceed 150 characters.")]
         public string? YourFFLMarking { get; set; }

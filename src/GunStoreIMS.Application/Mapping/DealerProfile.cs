@@ -1,6 +1,8 @@
 ﻿using AutoMapper;
 using GunStoreIMS.Domain.Models;
 using GunStoreIMS.Shared.Dto;
+using GunStoreIMS.Shared.Enums;
+using System;
 
 namespace GunStoreIMS.Application.Mapping
 {
@@ -10,24 +12,23 @@ namespace GunStoreIMS.Application.Mapping
         {
             // Domain → DTO
             CreateMap<DealerRecord, DealerRecordDto>()
-                .ForMember(d => d.DealerName, o => o.MapFrom(s => s.TradeName))
-                .ForMember(d => d.StreetAddress, o => o.MapFrom(s => s.StreetAddress))
-                .ForMember(d => d.City, o => o.MapFrom(s => s.City))
-                .ForMember(d => d.State, o => o.MapFrom(s => s.State))
-                .ForMember(d => d.Zip, o => o.MapFrom(s => s.Zip))
-                .ForMember(d => d.FFLNumber, o => o.MapFrom(s => s.FFLNumber))
-                .ForMember(d => d.LicenseExpirationDate, o => o.MapFrom(s => s.LicenseExpirationDate));
+                .ForMember(dest => dest.LicenseExpirationDate, opt => opt.MapFrom(src => src.ExpirationDateUtc))
+                .ForMember(dest => dest.State, opt => opt.MapFrom(src => src.State.ToString()))
+                .ForMember(dest => dest.LicenseType, opt => opt.MapFrom(src => src.LicenseType.ToString()));
 
             // DTO → Domain
             CreateMap<DealerRecordDto, DealerRecord>()
-                .ForMember(d => d.Id, o => o.Ignore())
-                .ForMember(d => d.TradeName, o => o.MapFrom(s => s.DealerName))
-                .ForMember(d => d.StreetAddress, o => o.MapFrom(s => s.StreetAddress))
-                .ForMember(d => d.City, o => o.MapFrom(s => s.City))
-                .ForMember(d => d.State, o => o.MapFrom(s => s.State))
-                .ForMember(d => d.Zip, o => o.MapFrom(s => s.Zip))
-                .ForMember(d => d.FFLNumber, o => o.MapFrom(s => s.FFLNumber))
-                .ForMember(d => d.LicenseExpirationDate, o => o.MapFrom(s => s.LicenseExpirationDate));
+                .ForMember(dest => dest.Id, opt => opt.Ignore())
+                .ForMember(dest => dest.RowVersion, opt => opt.Ignore())
+                .ForMember(dest => dest.RecordDate, opt => opt.Ignore())
+                .ForMember(dest => dest.LastUpdatedUtc, opt => opt.Ignore())
+                .ForMember(dest => dest.IsActive, opt => opt.Ignore())
+                .ForMember(dest => dest.AcquisitionsFrom, opt => opt.Ignore())
+                .ForMember(dest => dest.DispositionsTo, opt => opt.Ignore())
+                .ForMember(dest => dest.Form4473s, opt => opt.Ignore())
+                .ForMember(dest => dest.ExpirationDateUtc, opt => opt.MapFrom(src => src.LicenseExpirationDate))
+                .ForMember(dest => dest.State, opt => opt.MapFrom(src => Enum.Parse<USState>(src.State, true)))
+                .ForMember(dest => dest.LicenseType, opt => opt.MapFrom(src => Enum.Parse<FflLicenseType>(src.LicenseType, true)));
         }
     }
 }

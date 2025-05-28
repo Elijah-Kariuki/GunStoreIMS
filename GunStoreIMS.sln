@@ -15,6 +15,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GunStoreIMS.Persistence", "
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GunStoreIMS.Shared", "src\GunStoreIMS.Shared\GunStoreIMS.Shared.csproj", "{746B1787-B685-B16C-D11B-0269DD4DC86F}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GunStoreIMS.Abstractions", "src\GunStoreIMS.Abstractions\GunStoreIMS.Abstractions.csproj", "{280FBD5B-2720-B534-D07D-292492FE4F5E}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -97,6 +99,18 @@ Global
 		{746B1787-B685-B16C-D11B-0269DD4DC86F}.Release|x64.Build.0 = Release|Any CPU
 		{746B1787-B685-B16C-D11B-0269DD4DC86F}.Release|x86.ActiveCfg = Release|Any CPU
 		{746B1787-B685-B16C-D11B-0269DD4DC86F}.Release|x86.Build.0 = Release|Any CPU
+		{280FBD5B-2720-B534-D07D-292492FE4F5E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{280FBD5B-2720-B534-D07D-292492FE4F5E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{280FBD5B-2720-B534-D07D-292492FE4F5E}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{280FBD5B-2720-B534-D07D-292492FE4F5E}.Debug|x64.Build.0 = Debug|Any CPU
+		{280FBD5B-2720-B534-D07D-292492FE4F5E}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{280FBD5B-2720-B534-D07D-292492FE4F5E}.Debug|x86.Build.0 = Debug|Any CPU
+		{280FBD5B-2720-B534-D07D-292492FE4F5E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{280FBD5B-2720-B534-D07D-292492FE4F5E}.Release|Any CPU.Build.0 = Release|Any CPU
+		{280FBD5B-2720-B534-D07D-292492FE4F5E}.Release|x64.ActiveCfg = Release|Any CPU
+		{280FBD5B-2720-B534-D07D-292492FE4F5E}.Release|x64.Build.0 = Release|Any CPU
+		{280FBD5B-2720-B534-D07D-292492FE4F5E}.Release|x86.ActiveCfg = Release|Any CPU
+		{280FBD5B-2720-B534-D07D-292492FE4F5E}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

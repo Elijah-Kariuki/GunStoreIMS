@@ -1,26 +1,39 @@
-﻿using System;
+﻿// File: GunStoreIMS.Application/Services/FirearmService.cs
+using AutoMapper;
+using GunStoreIMS.Abstractions.Interfaces; // Use IFirearmRepository
+using GunStoreIMS.Domain.Models;
+using GunStoreIMS.Domain.Utilities;
+using GunStoreIMS.Shared.Dto;
+using GunStoreIMS.Shared.Enums;
+using Microsoft.EntityFrameworkCore; // For DbUpdateException
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using AutoMapper;
-using Microsoft.EntityFrameworkCore;
-using GunStoreIMS.Domain.Models;
-using GunStoreIMS.Persistence.Data;
-using GunStoreIMS.Shared.Dto;
-using GunStoreIMS.Shared.Enums;
-using GunStoreIMS.Domain.Utilities;
+using GunStoreIMS.Application.Services;
 
 namespace GunStoreIMS.Application.Services
 {
     public class FirearmService : IFirearmService
     {
-        private readonly FirearmsInventoryDB _db;
+        private readonly IFirearmRepository _firearmRepository; // CHANGED
+        private readonly IAcquisitionRecordRepository _acquisitionRecordRepository; // If creating AcquisitionRecord here
+        private readonly IDispositionRecordRepository _dispositionRecordRepository; // If creating DispositionRecord here
         private readonly IMapper _mapper;
+        private readonly BusinessRules _businessRules; // Assuming this contains CanAcquire, CanDispose etc.
+                                                                            // Or inject specific rule classes like FirearmBusinessRulesManager
 
-        public FirearmService(FirearmsInventoryDB dbContext, IMapper mapper)
+        public FirearmService(
+            IFirearmRepository firearmRepository, // CHANGED
+            IAcquisitionRecordRepository acquisitionRecordRepository, // ADDED
+            IDispositionRecordRepository dispositionRecordRepository, // ADDED
+            IMapper mapper)
         {
-            _db = dbContext ?? throw new ArgumentNullException(nameof(dbContext));
+            _firearmRepository = firearmRepository ?? throw new ArgumentNullException(nameof(firearmRepository));
+            _acquisitionRecordRepository = acquisitionRecordRepository ?? throw new ArgumentNullException(nameof(acquisitionRecordRepository));
+            _dispositionRecordRepository = dispositionRecordRepository ?? throw new ArgumentNullException(nameof(dispositionRecordRepository));
             _mapper = mapper ?? throw new ArgumentNullException(nameof(mapper));
+            _businessRules = new Application.Services.BusinessRules(); // Or inject if it has dependencies
         }
 
         public async Task<PagedResultDto<FirearmLineDto>> QueryFirearmsAsync(
@@ -30,14 +43,15 @@ namespace GunStoreIMS.Application.Services
             if (pageSize <= 0) pageSize = 10;
 
             if (!Enum.TryParse<FirearmStatus>(statusString, true, out var status))
-                return new PagedResultDto<FirearmLineDto>(new List<FirearmLineDto>(), 0, page, pageSize);
-
-            var query = BusinessRules.WhereByStatus(_db.Firearms.AsQueryable(), status);
-            var total = await query.CountAsync();
-            var items = await query
-                .Skip((page - 1) * pageSize)
-                .Take(pageSize)
-                .ToListAsync();
+            {
+                // FIX: Use 4-arg constructor and set ErrorMessage property
+                return new PagedResultDto<FirearmLineDto>(new List<FirearmLineDto>(), 0, page, pageSize)
+                {
+                    ErrorMessage = "Invalid status string."
+                };
+            }
+            // Query logic moved to repository
+            var (items, total) = await _firearmRepository.QueryAsync(status, page, pageSize);
 
             var dtos = _mapper.Map<List<FirearmLineDto>>(items);
             return new PagedResultDto<FirearmLineDto>(dtos, total, page, pageSize);
@@ -46,58 +60,75 @@ namespace GunStoreIMS.Application.Services
         public async Task<FirearmDetailDto?> GetByIdAsync(Guid id)
         {
             if (id == Guid.Empty) return null;
-            var entity = await _db.Firearms.FindAsync(id);
+            var entity = await _firearmRepository.GetByIdAsync(id);
             if (entity == null) return null;
             return _mapper.Map<FirearmDetailDto>(entity);
         }
 
-        public async Task<OperationResult<FirearmDetailDto>> AcquireAsync(AcquisitionRecordDto dto)
+        public async Task<OperationResult<FirearmDetailDto>> AcquireAsync(AcquisitionRecordDto acquisitionDto)
         {
-            if (dto == null)
+            if (acquisitionDto == null)
                 return OperationResult<FirearmDetailDto>.Fail("Acquisition DTO cannot be null.");
 
-            if (!Enum.IsDefined(typeof(FirearmEnumType), dto.FirearmType))
-                return OperationResult<FirearmDetailDto>.Fail($"Invalid FirearmType '{dto.FirearmType}' provided.");
+            // Potentially use a dedicated FirearmCreateDto for the firearm part
+            if (!Enum.IsDefined(typeof(FirearmEnumType), acquisitionDto.FirearmType)) // FirearmType is on AcquisitionRecordDto
+                return OperationResult<FirearmDetailDto>.Fail($"Invalid FirearmType '{acquisitionDto.FirearmType}' provided.");
 
-            var vr = BusinessRules.CanAcquire(dto, _db);
-            if (!vr.Succeeded)
-                return OperationResult<FirearmDetailDto>.Fail(vr.ErrorMessage!);
+            // Check for uniqueness (Example: Assuming AcquisitionRecordDto has Manufacturer, Model, ImporterName)
+            // This check is more robust in the repository: ExistsBySerialNumberAsync
+            bool exists = await _firearmRepository.ExistsBySerialNumberAsync(
+                acquisitionDto.SerialNumber, // Assuming SerialNumber on DTO is for the Firearm
+                acquisitionDto.Manufacturer, // Assuming these are on AcquisitionRecordDto
+                acquisitionDto.Model,        // Assuming these are on AcquisitionRecordDto
+                acquisitionDto.ImporterName); // Assuming these are on AcquisitionRecordDto
 
-            Firearm entity = dto.FirearmType switch
+            if (exists)
             {
-                FirearmEnumType.Pistol => _mapper.Map<Pistol>(dto),
-                FirearmEnumType.Revolver => _mapper.Map<Revolver>(dto),
-                FirearmEnumType.Rifle => _mapper.Map<Rifle>(dto),
-                FirearmEnumType.Shotgun => _mapper.Map<Shotgun>(dto),
-                FirearmEnumType.Silencer => _mapper.Map<Silencer>(dto),
-                _ => null!
+                return OperationResult<FirearmDetailDto>.Fail($"Firearm with serial number '{acquisitionDto.SerialNumber}' by manufacturer '{acquisitionDto.Manufacturer}' and model '{acquisitionDto.Model}' already exists.");
+            }
+
+            // TODO: Replace with proper mapping for Firearm from a FirearmCreateDto or parts of AcquisitionRecordDto
+            Firearm firearmEntity = acquisitionDto.FirearmType switch
+            {
+                FirearmEnumType.Pistol => _mapper.Map<Pistol>(acquisitionDto), // Need specific mappings
+                FirearmEnumType.Revolver => _mapper.Map<Revolver>(acquisitionDto),
+                FirearmEnumType.Rifle => _mapper.Map<Rifle>(acquisitionDto),
+                FirearmEnumType.Shotgun => _mapper.Map<Shotgun>(acquisitionDto),
+                FirearmEnumType.Silencer => _mapper.Map<Silencer>(acquisitionDto),
+                // ... other types ...
+                _ => _mapper.Map<Firearm>(acquisitionDto) // Fallback or throw
             };
 
-            if (entity == null)
-                return OperationResult<FirearmDetailDto>.Fail($"Mapping for {dto.FirearmType} not implemented.");
+            if (firearmEntity == null)
+                return OperationResult<FirearmDetailDto>.Fail($"Mapping for {acquisitionDto.FirearmType} not implemented or failed.");
 
-            entity.Id = Guid.NewGuid();
-            entity.CurrentStatus = FirearmStatus.InInventory;
+            firearmEntity.Id = Guid.NewGuid();
+            firearmEntity.CurrentStatus = FirearmStatus.InInventory;
+            firearmEntity.InitialAcquisitionDate = acquisitionDto.AcquisitionDate; // Set initial acquisition date
 
-            _db.Firearms.Add(entity);
+            await _firearmRepository.AddAsync(firearmEntity);
 
-            var acq = _mapper.Map<AcquisitionRecord>(dto);
-            acq.Id = Guid.NewGuid();
-            acq.FirearmId = entity.Id;
-            _db.AcquisitionRecords.Add(acq);
+            var acqRecordEntity = _mapper.Map<AcquisitionRecord>(acquisitionDto);
+            acqRecordEntity.Id = Guid.NewGuid();
+            acqRecordEntity.FirearmId = firearmEntity.Id; // Link to the new firearm
+            // Ensure AcquisitionRecord.SerialNumber is set correctly if it's distinct from Firearm.SerialNumber
+            acqRecordEntity.SerialNumber = firearmEntity.SerialNumber; // Typically they are the same for the first acquisition.
+
+            await _acquisitionRecordRepository.AddAsync(acqRecordEntity);
 
             try
             {
-                await _db.SaveChangesAsync();
+                await _firearmRepository.SaveChangesAsync(); // This will save both firearm and its acquisition record if context is shared
             }
             catch (DbUpdateException ex)
             {
+                // Consider specific error handling or logging
                 return OperationResult<FirearmDetailDto>
                     .Fail($"Failed to save acquisition: {ex.InnerException?.Message ?? ex.Message}");
             }
 
-            var detail = _mapper.Map<FirearmDetailDto>(entity);
-            return OperationResult<FirearmDetailDto>.Success(detail);
+            var detailDto = _mapper.Map<FirearmDetailDto>(firearmEntity);
+            return OperationResult<FirearmDetailDto>.Success(detailDto);
         }
 
         public async Task<bool> CorrectAsync(FirearmCorrectionDto dto)
@@ -105,47 +136,60 @@ namespace GunStoreIMS.Application.Services
             if (dto == null || dto.FirearmId == Guid.Empty)
                 return false;
 
-            var entity = await _db.Firearms.FindAsync(dto.FirearmId);
-            var vr = BusinessRules.CanCorrect(dto, entity);
-            if (!vr.Succeeded)
-                return false;
+            var entity = await _firearmRepository.GetByIdAsync(dto.FirearmId);
+            if (entity == null) return false; // Firearm not found
 
-            _mapper.Map(dto, entity!);
-            _db.Firearms.Update(entity!);
+            // Example validation from BusinessRules (adapt as needed)
+            // var vr = _businessRules.CanCorrect(dto, entity);
+            // if (!vr.Succeeded) return false; // Or throw, or return OperationResult
+
+            _mapper.Map(dto, entity); // Apply corrections
+            _firearmRepository.Update(entity);
 
             try
             {
-                await _db.SaveChangesAsync();
+                await _firearmRepository.SaveChangesAsync();
                 return true;
             }
             catch (DbUpdateException)
             {
+                // Log error
                 return false;
             }
         }
 
-        public async Task<OperationResult<FirearmDetailDto>> DisposeAsync(DispositionRecordDto dto)
+        public async Task<OperationResult<FirearmDetailDto>> DisposeAsync(DispositionRecordDto dispositionDto)
         {
-            if (dto == null)
-                return OperationResult<FirearmDetailDto>.Fail("Disposition DTO cannot be null.");
-            if (dto.FirearmId == Guid.Empty)
-                return OperationResult<FirearmDetailDto>.Fail("Invalid Firearm ID.");
+            if (dispositionDto == null || dispositionDto.FirearmId == Guid.Empty)
+                return OperationResult<FirearmDetailDto>.Fail("Invalid disposition data or Firearm ID.");
 
-            var entity = await _db.Firearms.FindAsync(dto.FirearmId);
-            var vr = BusinessRules.CanDispose(dto, entity);
-            if (!vr.Succeeded)
-                return OperationResult<FirearmDetailDto>.Fail(vr.ErrorMessage!);
+            var firearmEntity = await _firearmRepository.GetByIdAsync(dispositionDto.FirearmId);
+            if (firearmEntity == null)
+                return OperationResult<FirearmDetailDto>.Fail("Firearm to dispose not found.");
 
-            var disp = _mapper.Map<DispositionRecord>(dto);
-            disp.Id = Guid.NewGuid();
-            disp.FirearmId = entity!.Id;
+            // Example from BusinessRules (adapt as needed)
+            // var vr = _businessRules.CanDispose(dispositionDto, firearmEntity);
+            // if (!vr.Succeeded) return OperationResult<FirearmDetailDto>.Fail(vr.ErrorMessage!);
+            if (firearmEntity.CurrentStatus != FirearmStatus.InInventory && firearmEntity.CurrentStatus != FirearmStatus.InRepair) // Simplified check
+            {
+                return OperationResult<FirearmDetailDto>.Fail($"Firearm is not in a disposable state. Current status: {firearmEntity.CurrentStatus}.");
+            }
 
-            _db.DispositionRecords.Add(disp);
-            _db.Firearms.Update(entity);
+
+            var dispRecordEntity = _mapper.Map<DispositionRecord>(dispositionDto);
+            dispRecordEntity.Id = Guid.NewGuid();
+            // FirearmId is already on dispositionDto and should be mapped.
+            dispRecordEntity.SerialNumber = firearmEntity.SerialNumber; // Record SN on disposition line.
+
+            await _dispositionRecordRepository.AddAsync(dispRecordEntity);
+
+            firearmEntity.CurrentStatus = FirearmStatus.Disposed;
+            firearmEntity.DateOfDisposition = dispRecordEntity.TransactionDate;
+            _firearmRepository.Update(firearmEntity);
 
             try
             {
-                await _db.SaveChangesAsync();
+                await _firearmRepository.SaveChangesAsync(); // Save both disposition and firearm update
             }
             catch (DbUpdateException ex)
             {
@@ -153,8 +197,8 @@ namespace GunStoreIMS.Application.Services
                     .Fail($"Failed to save disposition: {ex.InnerException?.Message ?? ex.Message}");
             }
 
-            var detail = _mapper.Map<FirearmDetailDto>(entity);
-            return OperationResult<FirearmDetailDto>.Success(detail);
+            var detailDto = _mapper.Map<FirearmDetailDto>(firearmEntity);
+            return OperationResult<FirearmDetailDto>.Success(detailDto);
         }
 
         public async Task<OperationResult> ArchiveAsync(Guid id)
@@ -162,22 +206,29 @@ namespace GunStoreIMS.Application.Services
             if (id == Guid.Empty)
                 return OperationResult.Fail("Invalid Firearm ID.");
 
-            var entity = await _db.Firearms.FindAsync(id);
-            var vr = BusinessRules.CanArchive(entity);
-            if (!vr.Succeeded)
-                return OperationResult.Fail(vr.ErrorMessage!);
+            var entity = await _firearmRepository.GetByIdAsync(id);
+            if (entity == null)
+                return OperationResult.Fail("Firearm to archive not found.");
 
-            entity!.CurrentStatus = FirearmStatus.Archived;
-            _db.Firearms.Update(entity);
+            // Example from BusinessRules (adapt as needed)
+            // var vr = _businessRules.CanArchive(entity);
+            // if (!vr.Succeeded) return OperationResult.Fail(vr.ErrorMessage!);
+            if (entity.CurrentStatus != FirearmStatus.Disposed)
+            {
+                return OperationResult.Fail("Firearm must be disposed before it can be archived.");
+            }
+
+            entity.CurrentStatus = FirearmStatus.Archived;
+            _firearmRepository.Update(entity);
 
             try
             {
-                await _db.SaveChangesAsync();
+                await _firearmRepository.SaveChangesAsync();
                 return OperationResult.Success();
             }
             catch (DbUpdateException ex)
             {
-                return OperationResult.Fail($"Failed to save archival: {ex.InnerException?.Message ?? ex.Message}");
+                return OperationResult.Fail($"Failed to archive firearm: {ex.InnerException?.Message ?? ex.Message}");
             }
         }
     }

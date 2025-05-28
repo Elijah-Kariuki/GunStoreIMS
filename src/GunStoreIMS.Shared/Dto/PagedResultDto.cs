@@ -9,23 +9,24 @@ namespace GunStoreIMS.Shared.Dto
     /// </summary>
     public class PagedResultDto<T>
     {
-        public IReadOnlyList<T> Items { get; }
-        public int TotalCount { get; }
-        public int Page { get; }
-        public int PageSize { get; }
-        public int TotalPages =>
-            PageSize == 0 ? 0 : (int)Math.Ceiling(TotalCount / (double)PageSize);
+        public List<T> Items { get; set; }
+        public int TotalCount { get; set; }
+        public int PageNumber { get; set; }
+        public int PageSize { get; set; }
+        public string? ErrorMessage { get; set; } // ADD THIS PROPERTY
 
-        public PagedResultDto(
-            IEnumerable<T> items,
-            int totalCount,
-            int page,
-            int pageSize)
+        // Ensure you have this constructor (or similar)
+        public PagedResultDto(List<T> items, int totalCount, int pageNumber, int pageSize)
         {
-            Items = items?.ToList() ?? new List<T>();
+            Items = items;
             TotalCount = totalCount;
-            Page = page;
+            PageNumber = pageNumber;
             PageSize = pageSize;
+        }
+        // You might also need a default constructor for some frameworks
+        public PagedResultDto()
+        {
+            Items = new List<T>();
         }
     }
 }

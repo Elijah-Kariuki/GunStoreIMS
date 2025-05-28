@@ -14,7 +14,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("GunStoreIMS.API")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+60ca0e5eb5bf4128fadb1fa6d45e9e94b1584b0a")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+1ce86b8b5924fbc46f0891bbe53c8b6b9c6304f7")]
 [assembly: System.Reflection.AssemblyProductAttribute("GunStoreIMS.API")]
 [assembly: System.Reflection.AssemblyTitleAttribute("GunStoreIMS.API")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]

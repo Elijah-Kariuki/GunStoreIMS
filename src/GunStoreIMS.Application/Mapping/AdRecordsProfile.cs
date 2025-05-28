@@ -11,16 +11,16 @@ namespace GunStoreIMS.Application.Mapping
         {
             // Domain -> DTO
             CreateMap<AcquisitionRecord, AcquisitionRecordDto>()
-                .ForMember(dest => dest.SourceAddress, o => o.MapFrom(src => src.SourceFullAddress))
-                .ForMember(dest => dest.SourceLicenseNumber, o => o.MapFrom(src => src.SourceFFLNumber));
+                .ForMember(dest => dest.SourceAddress, o => o.MapFrom(src => src.SourceAddress))
+                .ForMember(dest => dest.SourceLicenseNumber, o => o.MapFrom(src => src.SourceLicenseNumber));
 
             // DTO -> Domain
             CreateMap<AcquisitionRecordDto, AcquisitionRecord>()
                 .ForMember(dest => dest.Id, o => o.Ignore())
                 .ForMember(dest => dest.Firearm, o => o.Ignore())
                 .ForMember(dest => dest.RowVersion, o => o.Ignore())
-                .ForMember(dest => dest.SourceFullAddress, o => o.MapFrom(src => src.SourceAddress))
-                .ForMember(dest => dest.SourceFFLNumber, o => o.MapFrom(src => src.SourceLicenseNumber));
+                .ForMember(dest => dest.SourceAddress, o => o.MapFrom(src => src.SourceAddress))
+                .ForMember(dest => dest.SourceLicenseNumber, o => o.MapFrom(src => src.SourceLicenseNumber));
 
             // Disposition mappings
             CreateMap<DispositionRecord, DispositionRecordDto>();

@@ -1,0 +1,6 @@
+C:\Users\elija\source\repos\Enterprise_Back-End\GunStoreIMS_CSharp\GunStoreIMS\src\GunStoreIMS.Abstractions\obj\Debug\net8.0\GunStoreIMS.Abstractions.csproj.AssemblyReference.cache
+C:\Users\elija\source\repos\Enterprise_Back-End\GunStoreIMS_CSharp\GunStoreIMS\src\GunStoreIMS.Abstractions\obj\Debug\net8.0\GunStoreIMS.Abstractions.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\elija\source\repos\Enterprise_Back-End\GunStoreIMS_CSharp\GunStoreIMS\src\GunStoreIMS.Abstractions\obj\Debug\net8.0\GunStoreIMS.Abstractions.AssemblyInfoInputs.cache
+C:\Users\elija\source\repos\Enterprise_Back-End\GunStoreIMS_CSharp\GunStoreIMS\src\GunStoreIMS.Abstractions\obj\Debug\net8.0\GunStoreIMS.Abstractions.AssemblyInfo.cs
+C:\Users\elija\source\repos\Enterprise_Back-End\GunStoreIMS_CSharp\GunStoreIMS\src\GunStoreIMS.Abstractions\obj\Debug\net8.0\GunStoreIMS.Abstractions.csproj.CoreCompileInputs.cache
+C:\Users\elija\source\repos\Enterprise_Back-End\GunStoreIMS_CSharp\GunStoreIMS\src\GunStoreIMS.Abstractions\obj\Debug\net8.0\GunStoreIMS.Abstractions.sourcelink.json

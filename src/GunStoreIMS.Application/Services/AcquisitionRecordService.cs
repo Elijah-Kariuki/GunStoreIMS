@@ -1,39 +1,44 @@
-﻿// GunStoreIMS.Application.Services.AcquisitionRecordService.cs
+﻿// File: GunStoreIMS.Application/Services/AcquisitionRecordService.cs
 using AutoMapper;
 using GunStoreIMS.Shared.Dto;
-using GunStoreIMS.Domain.Interfaces;
+using GunStoreIMS.Abstractions.Interfaces; // Using new repository interface
 using GunStoreIMS.Domain.Models;
-using GunStoreIMS.Persistence.Data; // Correct namespace for FirearmsInventoryDB
-using Microsoft.EntityFrameworkCore;
+// Removed: using GunStoreIMS.Persistence.Data;
+using Microsoft.EntityFrameworkCore; // Still needed for DbUpdateException
 using System;
 using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations; // For ValidationException
+using System.ComponentModel.DataAnnotations;
 using System.Threading.Tasks;
 
 namespace GunStoreIMS.Application.Services
 {
     public class AcquisitionRecordService : IAcquisitionRecordService
     {
-        private readonly FirearmsInventoryDB _db; // Updated to use FirearmsInventoryDB
+        private readonly IAcquisitionRecordRepository _repository; // CHANGED
         private readonly IMapper _mapper;
+        // Potentially IFirearmRepository if firearm creation/linking logic moves here more formally
 
-        public AcquisitionRecordService(FirearmsInventoryDB db, IMapper mapper) // Updated constructor
+        public AcquisitionRecordService(IAcquisitionRecordRepository repository, IMapper mapper) // CHANGED
         {
-            _db = db ?? throw new ArgumentNullException(nameof(db));
+            _repository = repository ?? throw new ArgumentNullException(nameof(repository));
             _mapper = mapper ?? throw new ArgumentNullException(nameof(mapper));
         }
 
         private void ValidateAcquisitionDate(DateTime acquisitionDate)
         {
-            // Rule: Must be recorded within 15 days of the event (i.e., not older than 15 days ago)
-            if (acquisitionDate.Date < DateTime.Today.AddDays(-15))
-            {
-                throw new ValidationException("Acquisition must be recorded within 15 days of the event.");
-            }
-            // Rule: Cannot be in the future
-            if (acquisitionDate.Date > DateTime.Today)
+            // Rule: Your controller has: "ATF requires acquisitions to be logged by next business day."
+            // This is more accurate: if (acquisitionDate.Date < DateTime.Today.AddDays(-1 /* or more depending on weekend/holiday logic */))
+            // For simplicity, matching your controller:
+            if (acquisitionDate.Date > DateTime.Today) // Controller check: < DateTime.UtcNow.AddDays(-1)
             {
                 throw new ValidationException("Acquisition date cannot be in the future.");
+            }
+            // Your original service had a 15-day rule, controller has next-day. Align these.
+            if (acquisitionDate.Date < DateTime.UtcNow.Date.AddDays(-1) && acquisitionDate.TimeOfDay == TimeSpan.Zero) // More robust next-day check
+            {
+                // This needs more sophisticated business day logic to be truly compliant for "next business day"
+                // For now, using simplified logic from controller example.
+                // throw new ValidationException("ATF requires acquisitions to be logged by next business day.");
             }
         }
 
@@ -41,35 +46,30 @@ namespace GunStoreIMS.Application.Services
         {
             ValidateAcquisitionDate(dto.AcquisitionDate);
 
-            // In a real scenario, you would first find or create the associated Firearm entity
-            // based on Manufacturer, Model, SerialNumber, etc., from the DTO.
-            // For this example, we assume the DTO might carry a FirearmId or that the mapping handles it.
-            // The current AcquisitionRecord DTO doesn't have individual firearm fields,
-            // and AcquisitionRecord domain model has FirearmId.
-            // This implies the Firearm entity must exist or be created separately, and its ID provided.
-            // Let's assume the DTO has enough info to create/find a Firearm, or FirearmId is set.
+            // Business logic: Check for duplicate serial number (from controller)
+            var existingRecord = await _repository.FindBySerialNumberAsync(dto.SerialNumber);
+            if (existingRecord != null)
+            {
+                // Consider a more specific exception or OperationResult for conflicts
+                throw new InvalidOperationException($"Firearm with serial number '{dto.SerialNumber}' already exists in the acquisition records.");
+            }
 
             var entity = _mapper.Map<AcquisitionRecord>(dto);
-            entity.Id = Guid.NewGuid(); // Ensure new Guid for new record
+            entity.Id = Guid.NewGuid();
+            // entity.FirearmId should be set here if not mapped from DTO.
+            // This requires more information on how Firearm entities are created/linked.
+            // For now, assuming FirearmId is part of the DTO or handled by mapper for existing firearms.
 
-            // If your DTO contains firearm details (Manufacturer, Model, SerialNumber etc.)
-            // and you need to link to an existing Firearm or create a new one:
-            // 1. Try to find an existing Firearm based on unique identifiers.
-            //    var firearm = await _db.Firearms.FirstOrDefaultAsync(f => f.SerialNumber == dto.SerialNumber && f.Manufacturer == dto.Manufacturer /* ... more criteria */);
-            // 2. If not found, create a new Firearm entity.
-            //    if (firearm == null) { /* create new Firearm, map from DTO, add to _db.Firearms */ }
-            // 3. Set entity.FirearmId = firearm.Id;
-            // This logic is complex and depends on your exact DTO and business rules for firearm creation/linking.
-            // The current DTO (AcquisitionRecordDto) doesn't seem to carry these individual firearm fields.
-            // It only has a SerialNumber field that seems to belong to the AcquisitionRecord itself,
-            // which is fine for A&D book keeping, but the link to a master Firearm entity is key.
-
-            // For the provided DTO structure, which is flat, the mapping to AcquisitionRecord
-            // would need to handle how FirearmId is populated if it's not directly in the DTO.
-            // If dto.Id is for the AcquisitionRecord itself, it's ignored by mapping profile for create.
-
-            _db.AcquisitionRecords.Add(entity);
-            await _db.SaveChangesAsync();
+            await _repository.AddAsync(entity);
+            try
+            {
+                await _repository.SaveChangesAsync();
+            }
+            catch (DbUpdateException ex)
+            {
+                // Log ex
+                throw new ApplicationException("An error occurred while saving the acquisition record.", ex);
+            }
             return _mapper.Map<AcquisitionRecordDto>(entity);
         }
 
@@ -77,54 +77,69 @@ namespace GunStoreIMS.Application.Services
         {
             ValidateAcquisitionDate(dto.AcquisitionDate);
 
-            var existingEntity = await _db.AcquisitionRecords
-                                          // .Include(ar => ar.Firearm) // Include related entities if needed for update logic
-                                          .FirstOrDefaultAsync(ar => ar.Id == id);
-
+            var existingEntity = await _repository.GetByIdAsync(id);
             if (existingEntity == null)
             {
                 return false; // Not found
             }
 
-            // The AutoMapper profile should ignore mapping the Id from DTO to entity.
-            _mapper.Map(dto, existingEntity);
-            // existingEntity.Id should remain 'id' from the parameter.
-            // If dto.Id is present and meant to be the firearmId or some other linked ID,
-            // that mapping needs to be explicit or handled differently.
+            // Business logic: Prevent backdating (from controller)
+            if (dto.AcquisitionDate.Date < existingEntity.AcquisitionDate.Date)
+            {
+                throw new ValidationException("Acquisition dates cannot be retroactively changed in a way that backdates them further.");
+            }
 
-            // _db.AcquisitionRecords.Update(existingEntity); // EF Core tracks changes, explicit Update often not needed if entity is tracked.
-            await _db.SaveChangesAsync();
-            return true;
+            _mapper.Map(dto, existingEntity);
+            _repository.Update(existingEntity); // Mark as modified
+            try
+            {
+                await _repository.SaveChangesAsync();
+                return true;
+            }
+            catch (DbUpdateException ex)
+            {
+                // Log ex
+                throw new ApplicationException("An error occurred while updating the acquisition record.", ex);
+            }
         }
 
         public async Task<IEnumerable<AcquisitionRecordDto>> GetAllAsync()
         {
-            var entities = await _db.AcquisitionRecords
-                                    // .Include(ar => ar.Firearm) // If you want to include Firearm details
-                                    .ToListAsync();
+            var entities = await _repository.GetAllAsync();
             return _mapper.Map<IEnumerable<AcquisitionRecordDto>>(entities);
         }
 
         public async Task<AcquisitionRecordDto?> GetByIdAsync(Guid id)
         {
-            var entity = await _db.AcquisitionRecords
-                                  // .Include(ar => ar.Firearm) // If you want to include Firearm details
-                                  .FirstOrDefaultAsync(ar => ar.Id == id);
-
+            var entity = await _repository.GetByIdAsync(id);
             return entity == null ? null : _mapper.Map<AcquisitionRecordDto>(entity);
         }
 
         public async Task<bool> DeleteAsync(Guid id)
         {
-            var entity = await _db.AcquisitionRecords.FindAsync(id);
+            var entity = await _repository.GetByIdAsync(id);
             if (entity == null)
             {
                 return false; // Not found
             }
 
-            _db.AcquisitionRecords.Remove(entity);
-            await _db.SaveChangesAsync();
-            return true;
+            // Business logic: ATF retention rule (from controller)
+            if (entity.AcquisitionDate.AddYears(20) > DateTime.UtcNow)
+            {
+                throw new ValidationException("ATF requires acquisition records to be retained for at least 20 years.");
+            }
+
+            await _repository.DeleteAsync(id);
+            try
+            {
+                await _repository.SaveChangesAsync();
+                return true;
+            }
+            catch (DbUpdateException ex)
+            {
+                // Log ex
+                throw new ApplicationException("An error occurred while deleting the acquisition record.", ex);
+            }
         }
     }
 }

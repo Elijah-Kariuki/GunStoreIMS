@@ -2,8 +2,6 @@
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
-using GunStoreIMS.Domain.Interfaces;
-using GunStoreIMS.Domain.Models;
 using GunStoreIMS.Shared.Enums;
 using GunStoreIMS.Shared.Validation;
 
@@ -13,8 +11,8 @@ namespace GunStoreIMS.Domain.Models
     /// Represents a record of firearm acquisition, ensuring ATF compliance and traceability.
     /// </summary>
     [RequireFflOrAddress(
-        nameof(SourceFFLNumber),
-        nameof(SourceFullAddress),
+        nameof(SourceLicenseNumber),
+        nameof(SourceAddress),
         ErrorMessage = "Either the Source FFL# or the full Source address must be provided for an acquisition."
     )]
     public class AcquisitionRecord : IValidatableObject
@@ -46,20 +44,23 @@ namespace GunStoreIMS.Domain.Models
         public string SourceName { get; set; } = default!;
 
         // --- Source Details (Seller/FFL Information) ---
-        /// <summary>
-        /// FFL number of the seller, if applicable.
-        /// </summary>
-        [StringLength(30, ErrorMessage = "Source FFL number cannot exceed 30 characters.")]
-        [RegularExpression(@"^\d{1,2}-\d{2,3}-\d{3}-\d{2}-\d{2}-\d{5}$", ErrorMessage = "Invalid FFL number format.")]
-        public string? SourceFFLNumber { get; set; }
 
         /// <summary>
-        /// Full address of the seller (required for private acquisitions).
+        /// Federal Firearms License (FFL) number of the source, if applicable.
+        /// </summary>
+        [StringLength(30, ErrorMessage = "Source license number cannot exceed 30 characters.")]
+        [RegularExpression(@"^\d{1,2}-\d{2,3}-\d{3}-\d{2}-\d{2}-\d{5}$",
+            ErrorMessage = "Invalid FFL number format.")]
+        public string? SourceLicenseNumber { get; set; }
+
+        /// <summary>
+        /// Address of the source (required if source is a non-licensee).
         /// </summary>
         [StringLength(300, ErrorMessage = "Source address cannot exceed 300 characters.")]
-        public string? SourceFullAddress { get; set; }
+        public string? SourceAddress { get; set; }
 
         // --- Firearm Association ---
+
         /// <summary>
         /// Firearm ID linked to this acquisition record.
         /// </summary>
@@ -73,26 +74,28 @@ namespace GunStoreIMS.Domain.Models
         /// Serial number of the acquired firearm.
         /// </summary>
         [Required(ErrorMessage = "Serial number is required.")]
-        [StringLength(50, ErrorMessage = "Serial number cannot exceed 50 characters.")]
+        [StringLength(100, ErrorMessage = "Serial number cannot exceed 100 characters.")]
         [RegularExpression(@"^[A-Za-z0-9.\-/]+$", ErrorMessage = "Invalid characters in serial number.")]
         public string SerialNumber { get; set; } = default!;
 
         /// <summary>
-        /// Whether the acquisition is part of a private sale.
+        /// Indicates if the acquisition is part of a private sale.
         /// </summary>
         public bool IsPrivateSale { get; set; }
 
         /// <summary>
-        /// Additional notes related to the acquisition.
+        /// Any relevant acquisition notes (optional but useful for documentation).
         /// </summary>
         [StringLength(1000, ErrorMessage = "Notes cannot exceed 1000 characters.")]
         public string? Notes { get; set; }
 
         // --- Concurrency Control ---
+
         [Timestamp]
         public byte[] RowVersion { get; set; } = default!;
 
         // --- Validation Logic ---
+
         public IEnumerable<ValidationResult> Validate(ValidationContext validationContext)
         {
             if (AcquisitionDate.Date > DateTime.UtcNow.Date)
@@ -101,9 +104,9 @@ namespace GunStoreIMS.Domain.Models
                     new[] { nameof(AcquisitionDate) }
                 );
 
-            if (SerialNumber.Length < 1)
+            if (string.IsNullOrWhiteSpace(SerialNumber))
                 yield return new ValidationResult(
-                    "Serial number must be at least 1 character long.",
+                    "Serial number must be provided.",
                     new[] { nameof(SerialNumber) }
                 );
         }
